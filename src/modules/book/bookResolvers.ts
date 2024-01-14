@@ -1,3 +1,5 @@
+import { GraphQLError } from "graphql/error/GraphQLError.js";
+
 export const books = [
   {
     title: "The Awakening",
@@ -14,13 +16,19 @@ export const resolvers = {
     books: () => books,
   },
   Mutation: {
-    addBook: (_, { title, author }) => {
-      const newBook = {
-        title: title,
-        author: author,
-      };
-      books.push(newBook);
-      return books;
+    addBook: (_, { title, author }, context) => {
+      if (context?.validUser) {
+        const newBook = {
+          title: title,
+          author: author,
+        };
+        books.push(newBook);
+        return books;
+      } else {
+        throw new GraphQLError("not admin!", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+      }
     },
   },
 };
