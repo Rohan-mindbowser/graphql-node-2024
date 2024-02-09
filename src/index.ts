@@ -1,18 +1,13 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { graphqlSchema as schema } from "./modules/index.js";
-import { sequelize } from "./utils/dbConnection.js";
-import { GraphQLError } from "graphql";
+import { connection } from "./utils/dbConnection.js";
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("DB Connection success");
-    startServer();
-  })
-  .catch(() => {
-    console.log("DB Connection failed");
-  });
+//Checking DB connection here
+connection.once("open", function () {
+  console.log("MongoDB database connection established successfully");
+  startServer();
+});
 
 async function startServer() {
   const server = new ApolloServer({
@@ -25,9 +20,9 @@ async function startServer() {
       const token = req.headers.authorization;
       if (token) {
         // console.log(token)
-        return { token, sequelize };
+        return { token };
       }
-      return { sequelize };
+      return {};
     },
   });
 
