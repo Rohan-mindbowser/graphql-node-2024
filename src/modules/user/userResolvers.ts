@@ -13,7 +13,11 @@ export const resolvers = {
           fullName,
         });
         await user.save();
-        const userAccessToken = accessToken<any>({ email, time: new Date() });
+        const userAccessToken = accessToken<any>({
+          id: user._id.toHexString(),
+          email,
+          time: new Date(),
+        });
         const userRefreshToken = refreshToken<any>({
           email,
           time: new Date(),

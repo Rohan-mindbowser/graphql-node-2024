@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { graphqlSchema as schema } from "./modules/index.js";
 import { connection } from "./utils/dbConnection.js";
+import { getUserFromToken } from "./utils/getUserFromToken.js";
 
 //Checking DB connection here
 connection.once("open", function () {
@@ -19,8 +20,8 @@ async function startServer() {
     context: async ({ req, res }: any) => {
       const token = req.headers.authorization;
       if (token) {
-        // console.log(token)
-        return { token };
+        var decodedToken = await getUserFromToken(token);
+        return { decodedToken };
       }
       return {};
     },
