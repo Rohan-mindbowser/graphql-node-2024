@@ -5,7 +5,9 @@ export const resolvers = {
   Mutation: {
     addProduct: async (_, { input }, { decodedToken }) => {
       try {
-        if (!decodedToken.id) throw new GraphQLError("User not authorized");
+        if (!decodedToken.id) {
+          throw new Error("You are not authorized to perform this action.");
+        }
         const product = await Product.create({
           name: input.name,
           company: input.company,
@@ -16,7 +18,9 @@ export const resolvers = {
           id: product._id.toHexString(),
           message: "Product added...",
         };
-      } catch (error) {}
+      } catch (error) {
+        return error;
+      }
     },
   },
 };
