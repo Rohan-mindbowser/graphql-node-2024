@@ -4,8 +4,13 @@ export const typeDefs = `#graphql
         password:String,
         fullName:String
     }
-    type CreateUserMutationResponse{
+    interface User{
         email:String,
+        fullName:String,
+        id:String
+    } 
+    type CreateUserMutationResponse{
+        id:String
         password:String,
         accessToken:String,
         refreshToken:String,
@@ -13,6 +18,6 @@ export const typeDefs = `#graphql
     }
 
     type Mutation{
-        createUser(email:String,password:String):CreateUserMutationResponse
+        createUser(email:String,password:String,fullName:String):CreateUserMutationResponse
     } 
 `;
